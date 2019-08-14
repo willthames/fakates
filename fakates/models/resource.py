@@ -21,8 +21,8 @@ def get(group, version, kind, namespace, resource):
 
 
 def create(group, version, kind, namespace, resource, definition):
-    definition['metadata']['resourceVersion'] = next_resource_version()
-    definition['metadata']['creationTimestamp'] = datetime.isoformat(datetime.now())
+    definition['metadata']['resourceVersion'] = str(next_resource_version())
+    definition['metadata']['creationTimestamp'] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
     definition['metadata']['uid'] = str(uuid.uuid4())
     params = dict(group=group, version=version, kind=kind,
                   resource=resource, definition=definition)
@@ -37,7 +37,7 @@ def update(group, version, kind, namespace, resource, definition):
     before = get(group, version, kind, namespace, resource)
     before['metadata'].update(definition['metadata'])
     if before != definition:
-        definition['metadata']['resourceVersion'] = next_resource_version()
+        definition['metadata']['resourceVersion'] = str(next_resource_version())
     params = dict(group=group, version=version, kind=kind,
                   resource=resource, definition=definition)
     if namespace:

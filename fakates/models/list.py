@@ -12,15 +12,15 @@ def gvk_query(group, version, kind, namespace):
     return result
 
 
-def get(group, version, namespace, kind, link):
+def get(group, version, kind, namespace, link):
     db = get_db()
-    results = db.search(gvk_query(group, version, kind, namespace))
+    results = [item['definition'] for item in db.search(gvk_query(group, version, kind, namespace))]
     return {
         "kind": "%sList" % kind.capitalize()[:-1],
         "apiVersion": "v1",
         "metadata": {
             "selfLink": link,
-            "resourceVersion": next_resource_version()
+            "resourceVersion": str(next_resource_version())
         },
         "items": results
     }
