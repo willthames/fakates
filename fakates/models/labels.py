@@ -30,6 +30,5 @@ def labels_match_selector(labels, selector):
 
 
 def labels_match_selectors(labels, selectors):
-    print("Got here")
     return all([labels_match_selector(labels, selector)
                 for selector in selectors.split(',')])

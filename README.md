@@ -15,7 +15,7 @@ none of the wait expectations will ever be met!
 
 ```
 pip install -r requirements.txt
-FLASK_APP=run.py flask run
+python run.py [--database /path/to/db.json] [--port 5000] [--host 127.0.0.1]
 kubectl config set-cluster fakates --server http://localhost:5000
 kubectl config set-context fakates --cluster fakates
 kubectl config use-context fakates
@@ -35,11 +35,9 @@ whether resources are actually defined correctly
 # Not implemented
 
 ## Next on the list
-* `PATCH` method
-* `label-selectors`
-* Configurable port and address
-* Configurable "database" (we use tinydb which seems great, but hardcoding the path
-  to /tmp/db.json is not at all ideal!)
+[ ] `PATCH` method
+[ ] `label-selectors` (half done - `notin`, `!label` and `label != X` are not working
+    for resourecs with no labels)
 
 ## As needed
 * `as=Table` - https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables
