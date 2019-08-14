@@ -15,7 +15,8 @@ def next_resource_version():
         version = result['value'] + 1
     else:
         version = 1
-    db.update({'value': version}, field.name == 'resource_version')
+    db.upsert({'value': version, 'name': 'resource_version'},
+              field.name == 'resource_version')
     return version
 
 

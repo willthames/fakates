@@ -47,9 +47,9 @@ def update(group, version, kind, namespace, resource, definition):
     return definition
 
 
-def delete(group, version, kind, namespace, resource, definition):
+def delete(group, version, kind, namespace, resource):
     before = get(group, version, kind, namespace, resource)
     db = get_db()
-    db.delete(gvk_query(group, version, kind, namespace, resource))
-    before['status']['phase'] = 'Terminating'
+    db.remove(gvk_query(group, version, kind, namespace, resource))
+    #before['status']['phase'] = 'Terminating'
     return before
