@@ -62,4 +62,11 @@ def delete(group, version, kind, namespace, resource):
     db = get_db()
     db.remove(gvk_query(group, version, kind, namespace, resource))
     #before['status']['phase'] = 'Terminating'
+    if kind == 'namespaces':
+        query = Query()
+        cascade = db.search(query.namespace == namespace)
+        for item in cascade:
+            # we could delete directly here but delete will later modify
+            # the watch record
+            delete(cascade['group'], cascade['version'], "%ss" % cascade['kind'].lower(), namespace, cascade['resource'])
     return before

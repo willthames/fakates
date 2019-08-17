@@ -49,10 +49,23 @@ def already_exists(group, version, kind, namespace, resource):
     return make_response(jsonify(response), 409)
 
 
+def namespace_exists(namespace):
+    return get('core', 'v1', 'namespaces', None, namespace) is not None
+
+
 def handle_request(group, version, kind, namespace=None, resource=None):
     if not resource and request.json:
         resource = request.json['metadata']['name']
     existing = get(group, version, kind, namespace, resource)
+    # delete seems to be the only method that checks the resource existence
+    # before checking namespace existence
+    if request.method == 'DELETE':
+        if not existing:
+            return not_found(group, version, kind, namespace, resource)
+        result = delete(group, version, kind, namespace, resource)
+        return jsonify(result)
+    if namespace and not namespace_exists(namespace):
+        return not_found('core', 'v1', 'namespaces', None, namespace)
     if request.method == 'GET':
         if not existing:
             return not_found(group, version, kind, namespace, resource)
@@ -67,11 +80,6 @@ def handle_request(group, version, kind, namespace=None, resource=None):
         return jsonify(result)
     if request.method == 'PATCH':
         result = patch(group, version, kind, namespace, resource, request.json)
-        return jsonify(result)
-    if request.method == 'DELETE':
-        if not existing:
-            return not_found(group, version, kind, namespace, resource)
-        result = delete(group, version, kind, namespace, resource)
         return jsonify(result)
 
 
