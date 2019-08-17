@@ -35,13 +35,13 @@ whether resources are actually defined correctly
 # Not implemented
 
 ## Next on the list
-[ ] `PATCH` method
 [ ] `label-selectors` (half done - `notin`, `!label` and `label != X` are not working
     for resourecs with no labels)
+[ ] `watch` - https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes
+[ ] cascading delete of namespaces (ansible test suite relies on it)
 
 ## As needed
 * `as=Table` - https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables
-* `watch`
 * `limit`
 * `field-selectors`
 * `merge` types (particularly strategic, which will be hard)

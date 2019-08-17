@@ -1,4 +1,5 @@
 from fakates.models.db import get_db, next_resource_version
+from fakates.helpers import dict_merge
 from datetime import datetime
 import uuid
 from tinydb import Query
@@ -17,7 +18,10 @@ def gvk_query(group, version, kind, namespace, resource):
 
 def get(group, version, kind, namespace, resource):
     db = get_db()
-    return db.get(gvk_query(group, version, kind, namespace, resource))
+    record =  db.get(gvk_query(group, version, kind, namespace, resource))
+    if record:
+        return record['definition']
+    return None
 
 
 def create(group, version, kind, namespace, resource, definition):
@@ -33,7 +37,7 @@ def create(group, version, kind, namespace, resource, definition):
     return definition
 
 
-def update(group, version, kind, namespace, resource, definition):
+def replace(group, version, kind, namespace, resource, definition):
     before = get(group, version, kind, namespace, resource)
     before['metadata'].update(definition['metadata'])
     if before != definition:
@@ -45,6 +49,12 @@ def update(group, version, kind, namespace, resource, definition):
     db = get_db()
     db.update(params, gvk_query(group, version, kind, namespace, resource))
     return definition
+
+
+def patch(group, version, kind, namespace, resource, definition):
+    before = get(group, version, kind, namespace, resource)
+    definition = dict_merge(before, definition)
+    return replace(group, version, kind, namespace, resource, definition)
 
 
 def delete(group, version, kind, namespace, resource):

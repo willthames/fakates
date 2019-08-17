@@ -1,9 +1,9 @@
 from flask import Blueprint, request, make_response, jsonify
-from fakates.models.resource import get, create, update, delete
+from fakates.models.resource import get, create, replace, delete, patch
 
 resource_bp = Blueprint('resource_bp', __name__)
 
-ALLOWED_METHODS=['GET', 'POST', 'PUT', 'DELETE']
+ALLOWED_METHODS=['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 
 
 def details_and_kind_group(group, kind, resource):
@@ -63,7 +63,10 @@ def handle_request(group, version, kind, namespace=None, resource=None):
         result = create(group, version, kind, namespace, resource, request.json)
         return jsonify(result)
     if request.method == 'PUT':
-        result = update(group, version, kind, namespace, resource, request.json)
+        result = replace(group, version, kind, namespace, resource, request.json)
+        return jsonify(result)
+    if request.method == 'PATCH':
+        result = patch(group, version, kind, namespace, resource, request.json)
         return jsonify(result)
     if request.method == 'DELETE':
         if not existing:
