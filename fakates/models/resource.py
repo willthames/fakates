@@ -53,7 +53,7 @@ def replace(group, version, kind, namespace, resource, definition):
 
 def patch(group, version, kind, namespace, resource, definition):
     before = get(group, version, kind, namespace, resource)
-    definition = dict_merge(before, definition)
+    definition = dict_merge(before, definition, remove_nulls=True)
     return replace(group, version, kind, namespace, resource, definition)
 
 
