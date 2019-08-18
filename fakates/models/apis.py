@@ -1,4 +1,6 @@
 from fakates.models.db import get_db
+from fakates.models.crd import list_crd_apis, get_crd_api
+
 from tinydb import Query
 
 
@@ -17,15 +19,20 @@ def listapis():
     result = dict()
     for item in group_versions:
         if item['group'] not in result:
-            result[item['group']] = dict()
-        result[item['group']][item['version']] = item['definition']
+            result[item['group']] = list()
+        result[item['group']].append(item['version'])
+    result.update(list_crd_apis())
     return result
 
 
 def get(group, version):
     db = get_db()
     table = db.table('apis')
-    return table.get(gv_query(group, version))['definition']
+    result = table.get(gv_query(group, version))
+    if result:
+        return result['definition']
+    result = get_crd_api(group, version)
+    return result
 
 
 def upsert(group, version, definition):
@@ -34,17 +41,3 @@ def upsert(group, version, definition):
     table.upsert(dict(group=group, version=version, definition=definition),
                  gv_query(group, version))
     return definition
-
-
-def insert(group, version, definition):
-    db = get_db()
-    table = db.table('apis')
-    table.insert(dict(group=group, version=version, definition=definition))
-    return definition
-
-
-def delete(group, version):
-    db = get_db()
-    table = db.table('apis')
-    table.remove(gv_query(group, version))
-    return dict()

@@ -7,15 +7,23 @@ from flask import g
 DATABASE = '/tmp/db.json'
 
 
-def next_resource_version():
+def current_resource_version():
     db = get_db()
     table = db.table('kv')
     field = Query()
     result = table.get(field.key == 'resource_version')
     if result:
-        version = result['value'] + 1
+        version = result['value']
     else:
-        version = 1
+        version = 0
+    return version
+
+
+def next_resource_version():
+    db = get_db()
+    table = db.table('kv')
+    field = Query()
+    version = current_resource_version() + 1
     table.upsert({'value': version, 'key': 'resource_version'},
                  field.key == 'resource_version')
     return version

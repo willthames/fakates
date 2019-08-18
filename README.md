@@ -38,7 +38,6 @@ whether resources are actually defined correctly
 [ ] `label-selectors` (half done - `notin`, `!label` and `label != X` are not working
     for resourecs with no labels)
 [ ] `watch` - https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes
-[ ] Handle CRDs
 
 ## As needed
 * `as=Table` - https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables

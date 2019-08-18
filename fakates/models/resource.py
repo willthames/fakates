@@ -65,7 +65,7 @@ def delete(group, version, kind, namespace, resource):
     db = get_db()
     table = db.table('resources')
     table.remove(gvk_query(group, version, kind, namespace, resource))
-    #before['status']['phase'] = 'Terminating'
+    # before['status']['phase'] = 'Terminating'
     if kind == 'namespaces':
         query = Query()
         cascade = table.search(query.namespace == namespace)

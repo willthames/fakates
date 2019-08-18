@@ -13,7 +13,7 @@
                 }{{ "," if not loop.last }}
 {% endfor %}
             ],
-{% set preferred_version = groups[group].keys() | preferred_version %}
+{% set preferred_version = groups[group] | preferred_version %}
             "preferredVersion": {
                 "groupVersion": "{{ group }}/{{ preferred_version }}",
                 "version": "{{ preferred_version }}"
