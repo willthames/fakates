@@ -23,6 +23,17 @@ def create_app():
         if db is not None:
             db.close()
 
+    @app.template_filter('preferred_version')
+    def preferred_version_filter(versions):
+        if 'v1' in versions:
+            return 'v1'
+        beta = [item for item in versions if item.startswith('v1beta')].sort()
+        if beta:
+            return beta[:-1]
+        alpha = [item for item in versions if item.startswith('v1beta')].sort()
+        if alpha:
+            return alpha[:-1]
+
     return app
 
 

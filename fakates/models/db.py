@@ -9,14 +9,15 @@ DATABASE = '/tmp/db.json'
 
 def next_resource_version():
     db = get_db()
+    table = db.table('kv')
     field = Query()
-    result = db.get(field.name == 'resource_version')
+    result = table.get(field.key == 'resource_version')
     if result:
         version = result['value'] + 1
     else:
         version = 1
-    db.upsert({'value': version, 'name': 'resource_version'},
-              field.name == 'resource_version')
+    table.upsert({'value': version, 'key': 'resource_version'},
+                 field.key == 'resource_version')
     return version
 
 

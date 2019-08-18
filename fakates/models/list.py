@@ -18,8 +18,9 @@ def gvk_query(group, version, kind, namespace, label_selectors):
 
 def get(group, version, kind, namespace, link, label_selectors):
     db = get_db()
+    table = db.table('resources')
     results = [item['definition']
-               for item in db.search(gvk_query(group, version, kind, namespace, label_selectors))]
+               for item in table.search(gvk_query(group, version, kind, namespace, label_selectors))]
     return {
         "kind": "%sList" % kind.capitalize()[:-1],
         "apiVersion": "v1",

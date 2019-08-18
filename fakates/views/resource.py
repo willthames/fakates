@@ -12,7 +12,7 @@ def details_and_kind_group(group, kind, resource):
         "kind": kind
     }
     if group != 'core':
-        kind_group='{}.{}' % (kind, group)
+        kind_group='%s.%s' % (kind, group)
         details['group'] = group
     else:
         kind_group = kind
@@ -98,7 +98,7 @@ def group_cluster_resource(group, version, kind, resource):
     return handle_request(group, version, kind, None, resource)
 
 
-@resource_bp.route('/api/<group>/<version>/namespaces/<namespace>/<kind>/<resource>', methods=ALLOWED_METHODS)
+@resource_bp.route('/apis/<group>/<version>/namespaces/<namespace>/<kind>/<resource>', methods=ALLOWED_METHODS)
 def group_namespaced_resource(group, version, kind, namespace, resource):
     return handle_request(group, version, kind, namespace, resource)
 
@@ -118,6 +118,6 @@ def create_group_cluster_resource(group, version, kind):
     return handle_request(group, version, kind)
 
 
-@resource_bp.route('/api/<group>/<version>/namespaces/<namespace>/<kind>', methods=['POST'])
+@resource_bp.route('/apis/<group>/<version>/namespaces/<namespace>/<kind>', methods=['POST'])
 def create_group_namespaced_resource(group, version, kind, namespace):
-    return handle_request(group, version, namespace, kind)
+    return handle_request(group, version, kind, namespace)

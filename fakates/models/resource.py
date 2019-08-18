@@ -18,7 +18,8 @@ def gvk_query(group, version, kind, namespace, resource):
 
 def get(group, version, kind, namespace, resource):
     db = get_db()
-    record =  db.get(gvk_query(group, version, kind, namespace, resource))
+    table = db.table('resources')
+    record =  table.get(gvk_query(group, version, kind, namespace, resource))
     if record:
         return record['definition']
     return None
@@ -33,7 +34,8 @@ def create(group, version, kind, namespace, resource, definition):
     if namespace:
         params['namespace'] = namespace
     db = get_db()
-    db.insert(params)
+    table = db.table('resources')
+    table.insert(params)
     return definition
 
 
@@ -47,7 +49,8 @@ def replace(group, version, kind, namespace, resource, definition):
     if namespace:
         params['namespace'] = namespace
     db = get_db()
-    db.update(params, gvk_query(group, version, kind, namespace, resource))
+    table = db.table('resources')
+    table.update(params, gvk_query(group, version, kind, namespace, resource))
     return definition
 
 
@@ -60,11 +63,12 @@ def patch(group, version, kind, namespace, resource, definition):
 def delete(group, version, kind, namespace, resource):
     before = get(group, version, kind, namespace, resource)
     db = get_db()
-    db.remove(gvk_query(group, version, kind, namespace, resource))
+    table = db.table('resources')
+    table.remove(gvk_query(group, version, kind, namespace, resource))
     #before['status']['phase'] = 'Terminating'
     if kind == 'namespaces':
         query = Query()
-        cascade = db.search(query.namespace == namespace)
+        cascade = table.search(query.namespace == namespace)
         for item in cascade:
             # we could delete directly here but delete will later modify
             # the watch record
